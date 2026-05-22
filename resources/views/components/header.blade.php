@@ -13,12 +13,17 @@
 
 <body>
     <nav>
-        <a href="index.html" class="nav-logo">Le Blog</a>
+        {{-- Lien vers la route 'home' (/) --}}
+        <a href="{{ route('home') }}" class="nav-logo">@yield('title', 'Le Blog')</a>
+        
         <ul class="nav-links">
-            <li><a href="index.html">Accueil</a></li>
-            <li><a href="articles-public.html">Articles</a></li>
-            <li><a href="categories-public.html">Catégories</a></li>
-            <li><a href="about.html" class="active">À propos</a></li>
-            <li><a href="dashboard.html">Dashboard</a></li>
+            {{-- Utilisation de la fonction route() avec le nom de vos routes dans web.php --}}
+            <li><a href="{{ route('home') }}">Accueil</a></li>
+            <li><a href="{{ route('articles.index') }}">Articles</a></li>
+            <li><a href="{{ route('categories.index') }}">Catégories</a></li>
+            <li><a href="{{ route('about') }}" class="active">À propos</a></li>
+            
+            {{-- Le dashboard (espace d'administration) --}}
+            <li><a href="{{ route('dashboard.index') }}">Dashboard</a></li>
         </ul>
     </nav>

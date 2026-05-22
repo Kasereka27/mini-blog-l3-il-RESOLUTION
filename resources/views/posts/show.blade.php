@@ -1,6 +1,6 @@
 @extends('app')
 
-@section('title',  $post->title . ' — Le Blog')
+@section('title',  $post . ' — Le Blog')
 
 @section('content')
 

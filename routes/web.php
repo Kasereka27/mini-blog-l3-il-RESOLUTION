@@ -19,7 +19,7 @@ Route::prefix('/dashboard')
     Route::get('', 'index')->name('index');
     Route::get('/articles', 'articles')->name('articles');
     Route::get('/categories', 'categories')->name('categories');
-    Route::get('/utilisateurs', 'comments')->name('users');
-    Route::get('/commentaires', 'about')->name('comments');
+    Route::get('/utilisateurs', 'users')->name('users');
+    Route::get('/commentaires', 'comments')->name('comments');
     Route::get('/reglages', 'settings')->name('settings');
 });

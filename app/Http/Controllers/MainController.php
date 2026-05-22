@@ -14,8 +14,8 @@ class MainController
         return view('posts.articles');
     }
 
-    public function article($slug){
-        return view('posts.show');
+    public function article(string $slug){
+        return view('posts.show', ['post' => $slug]);
     }
 
     public function categories(){
