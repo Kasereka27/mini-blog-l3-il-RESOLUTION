@@ -1,29 +1,8 @@
-<!DOCTYPE html>
-<html lang="fr">
+@extends('app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catégories — Le Blog</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/index.css') }}">
-</head>
+@section('title', 'Catégories — Le Blog') 
 
-<body>
-
-    <nav>
-        <a href="index.html" class="nav-logo">Le Blog</a>
-        <ul class="nav-links">
-            <li><a href="index.html">Accueil</a></li>
-            <li><a href="articles-public.html">Articles</a></li>
-            <li><a href="categories-public.html" class="active">Catégories</a></li>
-            <li><a href="about.html">À propos</a></li>
-            <li><a href="dashboard.html">Dashboard</a></li>
-        </ul>
-    </nav>
-
+@section('content')
     <div class="page-header">
         <div class="page-tag">Explorer</div>
         <h1 class="page-title">Catégories</h1>
@@ -219,15 +198,4 @@
 
     </div>
 
-    <footer>
-        <span>© 2026 Le Blog. Tous droits réservés.</span>
-        <div>
-            <a href="#">Mentions légales</a>
-            <a href="#">Confidentialité</a>
-            <a href="dashboard.html">Admin</a>
-        </div>
-    </footer>
-
-</body>
-
-</html>
+@endsection
