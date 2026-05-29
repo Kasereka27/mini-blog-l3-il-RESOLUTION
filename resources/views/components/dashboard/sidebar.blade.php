@@ -1,3 +1,8 @@
+<aside class="sidebar">
+    <div class="sidebar-brand">
+        <a href="{{ route('home') }}" class="sidebar-logo">Le Blog</a>
+        <div class="sidebar-sub">Administration</div>
+    </div>
     <nav class="sidebar-nav">
     <div class="nav-section-label">Vue d'ensemble</div>
     <a href="{{ route('dashboard.index') }}" class="nav-item {{ request()->routeIs('dashboard.index') ? 'active' : '' }}">
