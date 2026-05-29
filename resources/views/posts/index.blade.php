@@ -65,7 +65,7 @@
             <a href="#" class="section-link">Voir tout →</a>
         </div>
         <div class="articles-grid">
-            <a href="article.html" class="article-card featured">
+            <a href="{{ route('articles.show', ['slug' => 'azerty-and-querty']) }}" class="article-card featured">
                 <div class="article-cat">Vitae &bull; À la une</div>
                 <h2 class="article-title">Excepturi eligendi aliquid iste laboriosam et soluta cum</h2>
                 <p class="article-excerpt">Recusandae non totam rerum vero at. Vel ut soluta ipsum nihil aut natus
@@ -78,7 +78,7 @@
                     <span>5 commentaires</span>
                 </div>
             </a>
-            <a href="article.html" class="article-card">
+            <a href="{{ route('articles.show', ['slug' => 'azerty-and-querty']) }}" class="article-card">
                 <div class="article-cat">Aperiam</div>
                 <h3 class="article-title">Aut repellat ut qui et</h3>
                 <p class="article-excerpt">Pariatur nobis dicta esse cum. Magni nesciunt facere exercitationem. Dolorum
@@ -88,7 +88,7 @@
                     <span>8 oct. 2019</span>
                 </div>
             </a>
-            <a href="article.html" class="article-card">
+            <a href="{{ route('articles.show', ['slug' => 'azerty-and-querty']) }}" class="article-card">
                 <div class="article-cat">Optio</div>
                 <h3 class="article-title">Dignissimos et eaque aut sed fugiat et</h3>
                 <p class="article-excerpt">Voluptas quod nihil voluptatum animi voluptates mollitia sed. Perspiciatis
