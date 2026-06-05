@@ -8,7 +8,7 @@
 
             <div class="panel">
                 <div class="panel-header">
-                    <div class="panel-title">Tous les utilisateurs (305)</div>
+                    <div class="panel-title">Tous les utilisateurs ({{ $users->count() }})</div>
                 </div>
                 <table>
                     <thead>
@@ -22,123 +22,34 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @forelse($users as $user)
                         <tr>
-                            <td class="text-muted">1</td>
+                            <td class="text-muted">{{ $user->id }}</td>
                             <td>
                                 <div class="user-cell">
-                                    <div class="user-init" style="background:#7B4F9E;color:#fff">CP</div>Prof. Collin
-                                    Predovic Jr.
+                                    <div class="user-init" style="background:{{ substr(md5($user->id), 0, 7) }};color:#fff">{{ strtoupper(substr($user->name, 0, 2)) }}</div>{{ $user->name }}
                                 </div>
                             </td>
-                            <td class="text-muted">jesus.wintheiser@example.com</td>
-                            <td><span class="verified">✓ Vérifié</span></td>
-                            <td class="text-muted">17 avr. 2026</td>
+                            <td class="text-muted">{{ $user->email }}</td>
+                            <td>
+                                @if($user->email_verified_at)
+                                <span class="verified">✓ Vérifié</span>
+                                @else
+                                <span class="text-muted">Non vérifié</span>
+                                @endif
+                            </td>
+                            <td class="text-muted">{{ $user->created_at->format('d M. Y') }}</td>
                             <td>
                                 <div class="actions"><button class="btn btn-edit"
-                                        onclick="openEdit('Prof. Collin Predovic Jr.','jesus.wintheiser@example.com')">Éditer</button><button
+                                        onclick="openEdit('{{ addslashes($user->name) }}','{{ addslashes($user->email) }}')">Éditer</button><button
                                         class="btn btn-danger">Suppr.</button></div>
                             </td>
                         </tr>
+                        @empty
                         <tr>
-                            <td class="text-muted">2</td>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-init" style="background:#2E86AB;color:#fff">IM</div>Mrs. Ima Metz
-                                </div>
-                            </td>
-                            <td class="text-muted">maude.graham@example.com</td>
-                            <td><span class="verified">✓ Vérifié</span></td>
-                            <td class="text-muted">17 avr. 2026</td>
-                            <td>
-                                <div class="actions"><button class="btn btn-edit"
-                                        onclick="openEdit('Mrs. Ima Metz','maude.graham@example.com')">Éditer</button><button
-                                        class="btn btn-danger">Suppr.</button></div>
-                            </td>
+                            <td colspan="6" style="text-align:center">Aucun utilisateur.</td>
                         </tr>
-                        <tr>
-                            <td class="text-muted">6</td>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-init" style="background:#C0392B;color:#fff">AR</div>Annetta
-                                    Runolfsson
-                                </div>
-                            </td>
-                            <td class="text-muted">valentine11@example.org</td>
-                            <td><span class="verified">✓ Vérifié</span></td>
-                            <td class="text-muted">17 avr. 2026</td>
-                            <td>
-                                <div class="actions"><button class="btn btn-edit"
-                                        onclick="openEdit('Annetta Runolfsson','valentine11@example.org')">Éditer</button><button
-                                        class="btn btn-danger">Suppr.</button></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-muted">132</td>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-init" style="background:#27AE60;color:#fff">JL</div>Jacklyn
-                                    Lueilwitz
-                                </div>
-                            </td>
-                            <td class="text-muted">jacobi.vesta@example.com</td>
-                            <td><span class="verified">✓ Vérifié</span></td>
-                            <td class="text-muted">17 avr. 2026</td>
-                            <td>
-                                <div class="actions"><button class="btn btn-edit"
-                                        onclick="openEdit('Jacklyn Lueilwitz','jacobi.vesta@example.com')">Éditer</button><button
-                                        class="btn btn-danger">Suppr.</button></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-muted">186</td>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-init" style="background:#E67E22;color:#fff">DT</div>Dr. Travon
-                                    Kirlin
-                                </div>
-                            </td>
-                            <td class="text-muted">gspinka@example.org</td>
-                            <td><span class="verified">✓ Vérifié</span></td>
-                            <td class="text-muted">17 avr. 2026</td>
-                            <td>
-                                <div class="actions"><button class="btn btn-edit"
-                                        onclick="openEdit('Dr. Travon Kirlin','gspinka@example.org')">Éditer</button><button
-                                        class="btn btn-danger">Suppr.</button></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-muted">246</td>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-init" style="background:#8E44AD;color:#fff">TL</div>Mrs. Tia
-                                    Lemke
-                                </div>
-                            </td>
-                            <td class="text-muted">tamia85@example.org</td>
-                            <td><span class="verified">✓ Vérifié</span></td>
-                            <td class="text-muted">17 avr. 2026</td>
-                            <td>
-                                <div class="actions"><button class="btn btn-edit"
-                                        onclick="openEdit('Mrs. Tia Lemke','tamia85@example.org')">Éditer</button><button
-                                        class="btn btn-danger">Suppr.</button></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-muted">305</td>
-                            <td>
-                                <div class="user-cell">
-                                    <div class="user-init" style="background:#1ABC9C;color:#fff">ML</div>Mikel Lynch
-                                </div>
-                            </td>
-                            <td class="text-muted">sbraun@example.net</td>
-                            <td><span class="verified">✓ Vérifié</span></td>
-                            <td class="text-muted">17 avr. 2026</td>
-                            <td>
-                                <div class="actions"><button class="btn btn-edit"
-                                        onclick="openEdit('Mikel Lynch','sbraun@example.net')">Éditer</button><button
-                                        class="btn btn-danger">Suppr.</button></div>
-                            </td>
-                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
                 <div class="pagination">

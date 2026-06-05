@@ -12,16 +12,16 @@
                 curiosité et une attention profonde au monde qui nous entoure.</p>
             <div class="hero-stats">
                 <div>
-                    <div class="stat-num">50</div>
+                    <div class="stat-num">{{ $stats['posts'] }}</div>
                     <div class="stat-label">Articles</div>
                 </div>
                 <div>
-                    <div class="stat-num">305</div>
-                    <div class="stat-label">Lecteurs</div>
+                    <div class="stat-num">{{ $stats['users'] }}</div>
+                    <div class="stat-label">Auteurs</div>
                 </div>
                 <div>
-                    <div class="stat-num">250</div>
-                    <div class="stat-label">Commentaires</div>
+                    <div class="stat-num">{{ $stats['categories'] }}</div>
+                    <div class="stat-label">Catégories</div>
                 </div>
             </div>
         </div>
@@ -106,57 +106,19 @@
     <div class="team-section">
         <div class="team-header">
             <h2 class="team-title">L'équipe</h2>
-            <span class="team-count">Quelques auteurs réguliers</span>
+            <span class="team-count">{{ $users->count() }} auteurs</span>
         </div>
         <div class="team-grid">
+            @foreach($users as $user)
             <div class="team-card">
-                <div class="team-avatar" style="background:#C0392B">JL</div>
-                <div class="team-name">Jacklyn Lueilwitz</div>
-                <div class="team-role">Rédactrice en chef</div>
-                <div class="team-articles">3 articles publiés</div>
+                <div class="team-avatar" style="background:{{ substr(md5($user->id), 0, 7) }}">
+                    {{ strtoupper(substr($user->name, 0, 2)) }}
+                </div>
+                <div class="team-name">{{ $user->name }}</div>
+                <div class="team-role">{{ $user->email }}</div>
+                <div class="team-articles">{{ $user->articles->count() }} articles publiés</div>
             </div>
-            <div class="team-card">
-                <div class="team-avatar" style="background:#2E86AB">DT</div>
-                <div class="team-name">Dr. Travon Kirlin</div>
-                <div class="team-role">Auteur — Aperiam</div>
-                <div class="team-articles">2 articles publiés</div>
-            </div>
-            <div class="team-card">
-                <div class="team-avatar" style="background:#27AE60">AR</div>
-                <div class="team-name">Annetta Runolfsson</div>
-                <div class="team-role">Auteure — Vitae</div>
-                <div class="team-articles">2 articles publiés</div>
-            </div>
-            <div class="team-card">
-                <div class="team-avatar" style="background:#8E44AD">DS</div>
-                <div class="team-name">Dr. Jenifer Sipes</div>
-                <div class="team-role">Auteure — Optio</div>
-                <div class="team-articles">2 articles publiés</div>
-            </div>
-            <div class="team-card">
-                <div class="team-avatar" style="background:#E67E22">TL</div>
-                <div class="team-name">Mrs. Tia Lemke</div>
-                <div class="team-role">Auteure — Tenetur</div>
-                <div class="team-articles">2 articles publiés</div>
-            </div>
-            <div class="team-card">
-                <div class="team-avatar" style="background:#1ABC9C">JW</div>
-                <div class="team-name">Juwan Wiegand</div>
-                <div class="team-role">Auteur — Dignissimos</div>
-                <div class="team-articles">1 article publié</div>
-            </div>
-            <div class="team-card">
-                <div class="team-avatar" style="background:#2C3E50">OS</div>
-                <div class="team-name">Osborne Sanford</div>
-                <div class="team-role">Auteur — Optio</div>
-                <div class="team-articles">1 article publié</div>
-            </div>
-            <div class="team-card">
-                <div class="team-avatar" style="background:#7F8C8D">EM</div>
-                <div class="team-name">Esteban Murphy</div>
-                <div class="team-role">Auteur — Tenetur</div>
-                <div class="team-articles">1 article publié</div>
-            </div>
+            @endforeach
         </div>
     </div>
 

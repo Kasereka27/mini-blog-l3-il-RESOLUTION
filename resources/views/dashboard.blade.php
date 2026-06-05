@@ -10,6 +10,7 @@
         rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    <title>@yield('title', 'Dashboard — Le Blog')</title>
 </head>
 
 <body>
@@ -23,12 +24,6 @@
         </div>
     </div>
 
-<<<<<<< HEAD
-    @yield('content')
-   
-    </div>
-=======
->>>>>>> 078cff3210bada79a529c6c611b3f30ad443e258
 </body>
 
 </html>

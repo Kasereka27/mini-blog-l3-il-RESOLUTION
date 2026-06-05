@@ -1,8 +1,8 @@
-# Évaluation — Mini Blog Laravel / Blade
+# Évaluation — Mini Blog Laravel / Blade — Partie 2
 
 **Module :** Développement Web avec Laravel
 **Niveau :** L3 — Informatique et Logiciels
-**Dépôt GitHub :** [Dr-Lab1/mini-blog-l3-il](https://github.com/Dr-Lab1/mini-blog-l3-il)
+**Dépôt GitHub :** [Dr-Lab1/mini-blog-l3-il-part2](https://github.com/Dr-Lab1/mini-blog-l3-il-part2)
 
 ---
 
@@ -12,10 +12,10 @@ Avant de commencer l'évaluation, effectuez les étapes suivantes dans l'ordre :
 
 ```bash
 # 1. Cloner le dépôt GitHub
-git clone https://github.com/Dr-Lab1/mini-blog-l3-il.git
+git clone https://github.com/Dr-Lab1/mini-blog-l3-il-part2.git
 
 # 2. Se déplacer dans le répertoire du projet
-cd mini-blog-l3-il
+cd mini-blog-l3-il-part2
 
 # 3. Installer les dépendances PHP
 composer install
@@ -25,254 +25,251 @@ cp .env.example .env
 
 # 5. Générer la clé de l'application
 php artisan key:generate
+
+# 6. Configurer la base de données dans le fichier .env
+# puis exécuter les migrations et les seeders
+php artisan migrate --seed
+
+# 7. Exécuter cette commande pour install Laravel Breeze
+composer require laravel/breeze --dev
 ```
 
-> Assurez-vous d'avoir **PHP 8.1+**, **Composer** et **Laravel 10+** installés sur votre machine avant de commencer.
+> Assurez-vous d'avoir un **PHP 8+**, **Composer** et **Laravel** compatibles installés sur votre machine avant de commencer.
 
 ---
 
 ## Travail à réaliser
 
-### Question 1 — Layouts Blade (racines des deux parties)
-
-Créez deux fichiers root Blade distincts :
-
-- `resources/views/App.blade.php` → pour la **partie publique** du blog
-- `resources/views/Dashboard.blade.php` → pour la **partie dashboard** (administration)
-
-Chaque root doit utiliser les directives `@yield` pour définir les zones dynamiques (au minimum : `title`, `content`). Chaque vue enfant devra utiliser `@extends` pour hériter du bon layout et `@section` / `@endsection` pour injecter son contenu dans les zones correspondantes.
-
-**Questions :**
-
-**1. Quelle est la différence entre `@yield('title')` et `@yield('title', 'Valeur par défaut')` ?**
-`@yield('title')` affichera un contenu vide si la section 'title' n'est pas définie dans la vue enfant, tandis que `@yield('title', 'Valeur par défaut')` affichera "Valeur par défaut" si la vue enfant ne définit pas de section title.
-
-**2. Pourquoi utilise-t-on `@extends` plutôt que d'inclure le header et le footer manuellement dans chaque fichier de vue ?**
-`@extends` permet d'inverser le contrôle (héritage de gabarit) : on définit un squelette global une seule fois dans le layout et on y injecte le contenu de la vue enfant via les sections. C'est plus propre, évite les doublons HTML lourds (comme les ouvertures `<html>`, `<head>`, etc.) et facilite la maintenance.
-
-**3. Comment s'assure-t-on qu'une vue du dashboard n'étende jamais accidentellement le layout public ?**
-Il suffit de vérifier la structure appelée par `@extends`. Une vue d'administration appellera `@extends('dashboard')` (ou `@extends('layouts.dashboard')`), alors qu'une vue publique fera `@extends('app')`. Garder les vues bien séparées en sous-dossiers aide aussi.
+> **Note préliminaire :** Créez vos propres relations Eloquent entre les modèles si vous les jugez nécessaires pour réaliser les tâches ci-dessous.
 
 ---
 
-### Question 2 — Assets & Composants de la partie publique
+### Question 1 — Page d'accueil
 
-1. Déplacez le fichier `index.css` dans le dossier `public/css/`.
-2. Référencez-le dans vos layouts en utilisant la fonction **`asset()`** de Laravel.
-3. Créez deux **composants Blade anonymes** :
-    - `resources/views/components/header.blade.php`
-    - `resources/views/components/footer.blade.php`
-4. Incluez ces composants dans le layout public en utilisant la syntaxe `@include()`.
+Dynamisez la page d'accueil en récupérant les données réelles depuis la base de données.
 
----
+**Tâches :**
 
-### Question 3 — Assets & Composants du dashboard
+1. Afficher les **3 derniers articles** dans la section des articles mis en avant.
 
-1. Déplacez le fichier `Dashboard.css` dans le dossier `public/css/`.
-2. Référencez-le dans vos layouts en utilisant la fonction **`asset()`**.
-3. Créez deux composants Blade pour le dashboard :
-    - `resources/views/components/dashboard/topbar.blade.php`
-    - `resources/views/components/dashboard/sidebar.blade.php`
-4. Incluez ces composants dans `Dashboard.blade.php`.
+   ```php
+   $articles = Post::limit(3)->orderByDesc('id')->get();
+   // Récupère les 3 derniers articles dans l'ordre décroissant
+   ```
 
-**Questions :**
+2. Afficher **5 catégories** dans la section des catégories.
 
-**1. Comment rendre la classe `active` d'un lien de la sidebar **dynamique** selon la route courante, en utilisant `request()->routeIs()` ou `Route::currentRouteName()` ?**
-On peut ajouter une condition ternaire dans l'attribut class du lien, par exemple : `class="nav-item {{ request()->routeIs('dashboard.articles') ? 'active' : '' }}"`. Si le nom de la route actuelle correspond, la classe `active` est ajoutée.
+   ```php
+   $categories = Category::limit(5)->get();
+   // Récupère les 5 premières catégories dans l'ordre croissant
+   ```
 
-**2. Pourquoi est-il préférable de placer les composants du dashboard dans un sous-dossier `components/dashboard/` plutôt que directement dans `components/` ?**
-Cela permet d'organiser et de séparer logiquement les composants réservés à l'administration de ceux créés pour le site public. Cela évite surtout les conflits de noms (par exemple avoir deux `sidebar.blade.php`, l'une pour l'admin, l'autre pour la vitrine).
-
----
-
-### Question 4 — Création des routes
-
-Dans le fichier `routes/web.php`, déclarez une route nommée pour chacune des vues suivantes :
-
-**Partie publique :**
-
-| URL                | Nom de la route    | Description          |
-| ------------------ | ------------------ | -------------------- |
-| `/`                | `home`             | Page d'accueil       |
-| `/articles`        | `articles.index`   | Liste des articles   |
-| `/articles/{slug}` | `articles.show`    | Détail d'un article  |
-| `/categories`      | `categories.index` | Liste des catégories |
-| `/about`           | `about`            | Page à propos        |
+3. Afficher les **statistiques réelles** (nombre total d'articles, de catégories et de commentaires) dans la section des stats de la page d'accueil.
 
 **Questions :**
 
-**1. Quelle est la différence entre `Route::get()` et `Route::post()` ? Dans quel cas utilise-t-on l'un plutôt que l'autre ?**
-`Route::get()` est utilisé pour récupérer et lire des ressources/données depuis le serveur (ex: afficher une page web). `Route::post()` est utilisé pour envoyer des données au serveur pour qu'il les traite (ex: ajouter un record en base via un formulaire).
+1. Comment passe-t-on plusieurs variables à une vue depuis un contrôleur en une seule instruction ?
+**Réponse :** On peut utiliser la fonction `compact('var1', 'var2')` ou passer un tableau associatif `['var1' => $var1]` comme second argument à la fonction `view()`.
 
-**2. Comment déclarer et nommer une route avec la méthode `->name()` ? Pourquoi les noms de routes sont-ils indispensables pour utiliser `route()` dans les vues Blade ?**
-On le fait en chaînant `->name('mon.nom')` à la définition. Par exemple : `Route::get('/about', [...])->name('about');`. Les noms de routes permettent à la fonction `route()` de générer directement l'URL. Si l'URL physique change dans le fichier web.php, aucune vue Blade utilisant la fonction `route()` n'a besoin d'être modifiée.
+2. Dans la vue Blade, comment affiche-t-on la valeur d'une variable avec protection contre les failles XSS ?
+**Réponse :** On utilise la syntaxe avec doubles accolades : `{{ $variable }}`.
 
-**3. Qu'est-ce qu'un paramètre de route dynamique comme `{id}` ? Comment le récupérer dans le contrôleur ?**
-C'est un segment variable dans l'URL (qui peut identifier un article précis, par ex). On le récupère simplement en l'ajoutant aux arguments de la méthode du contrôleur : `public function show($id) { ... }`.
-
-**4. Que se passe-t-il si deux routes ont la même URL mais des méthodes HTTP différentes (`GET` et `POST`) ?**
-Il n'y a pas de conflit. Laravel identifiera correctement la route à appeler selon le verbe HTTP de la requête (affichera la page avec GET, traitera son formulaire de soumission avec POST).
+3. Qu'est-ce que la directive `@foreach` en Blade et comment l'utilise-t-on pour afficher une liste d'articles ?
+**Réponse :** Elle permet de parcourir un tableau ou une collection. On l'utilise ainsi : `@foreach($articles as $article) {{ $article->title }} @endforeach`.
 
 ---
 
-### Question 5 — Groupement des routes du dashboard
+### Question 2 — Page Articles (publique)
 
-Créez un **groupe de routes** pour toutes les pages du dashboard en utilisant `Route::prefix()` et `->group()`.
+Dynamisez la page de liste des articles.
 
-Toutes les routes du dashboard doivent :
+**Tâches :**
 
-- Avoir le **préfixe d'URL** `/dashboard`
-- Avoir le **préfixe de nom** `dashboard.`
-- Pointer vers les méthodes de `DashboardController`
+1. N'afficher que les **10 derniers articles** dans la liste.
 
-Exemple de routes attendues :
+   ```php
+   $articles = Post::limit(10)->orderByDesc('id')->get();
+   ```
 
-| URL                       | Nom de la route        | Méthode du contrôleur |
-| ------------------------- | ---------------------- | --------------------- |
-| `/dashboard`              | `dashboard.index`      | `index`               |
-| `/dashboard/articles`     | `dashboard.articles`   | `articles`            |
-| `/dashboard/categories`   | `dashboard.categories` | `categories`          |
-| `/dashboard/utilisateurs` | `dashboard.users`      | `users`               |
-| `/dashboard/commentaires` | `dashboard.comments`   | `comments`            |
-| `/dashboard/reglages`     | `dashboard.settings`   | `settings`            |
+2. Remplacer le texte statique *"50 articles publiés dans 5 catégories"* par les **chiffres réels** issus de la base de données.
+
+3. Afficher le **nombre total d'articles** et le **nombre total de catégories** dans la barre de statistiques de la page.
+
+4. Dynamiser la section d'affichage des **catégories dans la sidebar** ou le filtre de la page.
 
 **Questions :**
 
-**1. Quelle est la syntaxe complète pour créer un groupe de routes avec un préfixe d'URL et un préfixe de nom en même temps ?**
-`Route::prefix('/dashboard')->name('dashboard.')->group(function () { ... });`
+1. Quelle est la différence entre `Post::all()` et `Post::limit(10)->orderByDesc('id')->get()` ? Quand préfère-t-on l'une ou l'autre ?
+**Réponse :** `Post::all()` charge tous les enregistrements de la table en mémoire, tandis que la seconde récupère uniquement les 10 derniers éléments. On préfère la deuxième pour optimiser les performances lorsqu'on n'a besoin que d'un sous-ensemble (ex. pour un aperçu ou une liste récente).
 
-**2. Quelle est la différence entre `Route::prefix()` et `Route::middleware()` dans un groupe de routes ?**
-`Route::prefix()` regroupe des routes en leur ajoutant un segment d'URL commun au début (ex. ajoute "/dashboard" à toutes). `Route::middleware()`, en revanche, applique des filtres d'interception (comme par exemple la vérification d'authentification ou les droits d'accès) avant de laisser la requête atteindre ces routes.
+2. Comment compte-t-on le nombre total d'enregistrements d'un modèle en Eloquent ?
+**Réponse :** On utilise la méthode `count()` sur le modèle : `Post::count()`.
 
-**3. Qu'est-ce que `Route::resource()` ? Pour quelles ressources (articles, catégories, utilisateurs) serait-il pertinent de l'utiliser et quelles routes génère-t-il automatiquement ?**
-`Route::resource('articles', ArticleController::class)` permet de déclarer en une seule ligne l'ensemble des routes CRUD (Create, Read, Update, Delete) standards (ex: `index`, `create`, `store`, `show`, `edit`, `update`, `destroy`). C'est optimal pour l'administration des Articles, des Catégories et des Utilisateurs afin d'avoir une convention standardisée de gestion.
+3. Comment utilise-t-on `@forelse` en Blade et en quoi est-il plus pratique que `@foreach` lorsqu'une collection peut être vide ?
+**Réponse :** On l'utilise ainsi : `@forelse($items as $item) ... @empty ... @endforelse`. Il est plus pratique car il gère nativement le cas où la collection est vide (via `@empty`), évitant de devoir ajouter une condition `@if` séparée.
 
 ---
 
-### Question 6 — Création des contrôleurs
+### Question 3 — Page Catégories (publique)
 
-Générez les deux contrôleurs suivants via la commande `php artisan make:controller` :
+Dynamisez la page des catégories.
 
-**`MainController`** — gérera toutes les vues publiques :
+**Tâches :**
 
-- `index()` → vue de la page d'accueil
-- `articles()` → vue de la liste des articles
-- `article($slug)` → vue du détail d'un article
-- `categories()` → vue de la liste des catégories
-- `about()` → vue de la page à propos
-
-**`DashboardController`** — gérera toutes les vues du dashboard :
-
-- `index()` → vue principale du dashboard
-- `articles()` → vue des articles (admin)
-- `categories()` → vue des catégories (admin)
-- `users()` → vue des utilisateurs
-- `comments()` → vue des commentaires
-- `settings()` → vue des réglages
-
-Chaque méthode doit retourner sa vue correspondante avec `return view('...')`.
+1. Afficher **toutes les catégories** avec, pour chacune, son **nombre d'articles** associés.
 
 **Questions :**
 
-**1. Quelle est la commande artisan pour générer un contrôleur ? Quelle option ajouter pour générer directement un **contrôleur de ressource** avec toutes les méthodes CRUD ?**
-La commande de base est `php artisan make:controller NomController`. Pour le générer en tant que constructeur de ressources CRUD, on ajoute le flag `--resource` ou `-r` : `php artisan make:controller NomController --resource`.
+1. Comment définit-on une relation `hasMany` entre un modèle `Category` et un modèle `Post` en Eloquent ?
+**Réponse :** Dans le modèle `Category`, on ajoute une méthode : `public function posts() { return $this->hasMany(Post::class); }`.
 
-**2. Quelle est la convention de nommage des méthodes d'un contrôleur de ressource Laravel (`index`, `show`, `create`, `store`, `edit`, `update`, `destroy`) ? À quelle action correspond chacune ?**
+2. Comment accède-t-on au nombre d'articles d'une catégorie dans une vue Blade — quelle est la différence entre `$category->posts->count()` et `$category->posts()->count()` ?
+**Réponse :** `$category->posts->count()` charge d'abord la collection entière des articles en mémoire puis les compte, alors que `$category->posts()->count()` exécute directement une requête SQL `COUNT` très performante en base de données. Alternativement on peut utiliser `withCount('posts')` et lire `$category->posts_count`.
 
-- `index` : Afficher la liste / le tableau des ressources
-- `create` : Afficher le formulaire de création
-- `store` : Enregistrer la nouvelle ressource (soumission POST de create)
-- `show` : Récupérer et afficher une seule ressource spécifique
-- `edit` : Afficher le formulaire de modification (pré-rempli) d'une ressource
-- `update` : Mettre à jour la ressource (soumission PUT/PATCH de edit)
-- `destroy` : Supprimer la ressource (soumission DELETE)
+3. Qu'est-ce que le **chargement eager** (`with()`) et pourquoi est-il important pour éviter le problème des requêtes N+1 lors de l'affichage des catégories avec leur nombre d'articles ?
+**Réponse :** Le chargement eager précharge les relations dans une seule (ou quelques) requête(s) SQL initiale(s). C'est crucial car cela évite d'exécuter une nouvelle requête pour chaque élément de la boucle (le problème N+1), améliorant ainsi fortement les performances.
 
-**3. Quelle est la différence entre ces trois façons de passer des données à une vue depuis un contrôleur ?**
+---
 
-```php
-return view('articles', ['posts' => $posts]);
-return view('articles', compact('posts'));
-return view('articles')->with('posts', $posts);
+### Question 4 — Page À propos (publique)
+
+Dynamisez la page à propos.
+
+**Tâches :**
+
+1. Afficher les **statistiques réelles** (nombre total d'articles, de catégories, d'utilisateurs ou de commentaires) dans la section statistiques.
+
+2. Lister **tous les utilisateurs** dans la section équipe.
+
+   ```php
+   $users = User::all();
+   ```
+
+**Questions :**
+
+1. Le modèle `User` existe déjà par défaut dans Laravel — dans quel fichier se trouve-t-il et quels attributs contient-il par défaut ?
+**Réponse :** Il se trouve dans `app/Models/User.php`. Par défaut, la migration génère les attributs `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at` et `updated_at`.
+
+2. Comment affiche-t-on conditionnellement un élément dans Blade — par exemple, n'afficher la liste des utilisateurs que si elle n'est pas vide ?
+**Réponse :** Avec la directive `@if` : `@if($users->isNotEmpty()) ... @endif` ou `@if($users->count() > 0) ... @endif`.
+
+3. Qu'est-ce que la directive `@empty` en Blade ?
+**Réponse :** Elle permet de vérifier si une variable ou expression est vide (similaire à `empty()` en PHP) : `@empty($var) ... @endempty`. Elle est aussi utilisée conjointement à `@forelse`.
+
+---
+
+### Question 5 — Dashboard — Page Index
+
+Dynamisez la page principale du tableau de bord.
+
+**Tâches :**
+
+1. Afficher les **statistiques réelles** dans les 4 cartes de statistiques (nombre d'articles, commentaires, utilisateurs, catégories).
+
+2. Afficher les **7 derniers articles** dans le tableau de la section "Articles récents".
+
+**Questions :**
+
+1. Comment récupérer les 7 derniers articles insérés en base de données avec Eloquent ?
+**Réponse :** `Post::latest()->limit(7)->get();` ou `Post::orderByDesc('id')->limit(7)->get();`.
+
+2. Comment accède-t-on à une colonne spécifique d'un objet Eloquent dans une vue Blade — par exemple le titre d'un article ?
+**Réponse :** On utilise la flèche pour accéder à la propriété de l'objet : `{{ $article->title }}`.
+
+3. Qu'est-ce que `$article->created_at` et comment le formater dans une vue Blade pour afficher une date lisible ?
+**Réponse :** C'est une instance de la bibliothèque Carbon. On peut la formater ainsi : `{{ $article->created_at->format('d/m/Y') }}`.
+
+---
+
+### Question 6 — Dashboard — Articles
+
+Dynamisez la page de gestion des articles dans le dashboard.
+
+**Tâches :**
+
+1. Afficher les **10 derniers articles** dans le tableau, avec pour chaque article : son titre, sa catégorie, son statut (publié ou brouillon), sa date de publication et son auteur.
+
+**Questions :**
+
+1. Comment récupérer les articles **avec leur catégorie associée** en une seule requête Eloquent (sans faire de requête supplémentaire pour chaque article) ?
+**Réponse :** En utilisant le chargement eager avec `with` : `Post::with('category')->get();`.
+
+2. Comment affiche-t-on le nom de la catégorie d'un article dans Blade si la relation `belongsTo` est définie sur le modèle `Post` ?
+**Réponse :** `{{ $article->category->name }}` (ou on peut utiliser nullsafe `?->name` si la catégorie peut être absente).
+
+3. Qu'est-ce qu'un **accesseur** (`get...Attribute`) en Eloquent et dans quel cas pourrait-il être utile ici ?
+**Réponse :** Un accesseur permet de transformer la valeur d'un attribut ou de créer un attribut virtuel lors de l'accès. Ici, on pourrait l'utiliser pour formater une date ou renvoyer un libellé textuel pour un statut de publication à partir d'un booléen.
+
+---
+
+### Question 7 — Dashboard — Catégories, Commentaires & Utilisateurs
+
+Dynamisez les trois pages de gestion restantes du dashboard.
+
+**Tâches :**
+
+1. **Catégories** — Afficher toutes les catégories dans le tableau.
+2. **Commentaires** — Afficher tous les commentaires dans la liste, avec pour chacun : son auteur, le titre de l'article concerné et sa date.
+3. **Utilisateurs** — Afficher tous les utilisateurs dans le tableau.
+
+**Questions :**
+
+1. Comment définit-on une relation `belongsTo` entre un commentaire et un article en Eloquent ?
+**Réponse :** Dans le modèle `Comment`, on ajoute la méthode : `public function post() { return $this->belongsTo(Post::class); }`.
+
+2. Dans la page des commentaires, comment affiche-t-on le titre de l'article auquel appartient un commentaire, en supposant que la relation est correctement définie ?
+**Réponse :** Avec `{{ $comment->post->title }}`.
+
+3. Quelle méthode Eloquent utilise-t-on pour récupérer **tous** les enregistrements d'une table sans condition ?
+**Réponse :** On utilise la méthode `all()`, par exemple `Comment::all()`.
+
+---
+
+## Structure de fichiers concernés
+
+Les fichiers que vous serez principalement amenés à modifier :
+
 ```
-
-Dans les trois cas, il n'y a absolument aucune différence d'un point de vue fonctionnel ou de résultat. La variable `$posts` sera transmise à la vue sous le nom de variable `$posts`. Ce sont simplement diverses conventions syntaxiques : un tableau natif PHP clés/valeurs, une fonction native PHP pour créer un tableau depuis une variable (`compact`), et une interface dite "fluent" propre à Laravel (`with`).
-
----
-
-### Question 7 — Liens et navigation
-
-Sont concernés (liste non exhaustive) :
-
-- Les liens de la navbar publique (Accueil, Articles, Catégories, À propos)
-- Les liens de la sidebar du dashboard (Dashboard, Articles, Catégories, Utilisateurs, Commentaires, Réglages)
-- Le lien « Voir le blog » dans la topbar du dashboard
-- Le lien « Dashboard / Admin » dans le footer public
-- Les liens « Voir tout → » sur la page d'accueil
-- Les liens sur les cartes d'articles (qui mènent vers le détail d'un article)
-- Le breadcrumb sur la page article
-- Le bouton « ↗ Voir le blog » dans le dashboard
-
----
-
-## 📁 Structure de fichiers attendue
-
-À la fin de l'évaluation, votre projet doit respecter l'arborescence suivante :
-
-```
-resources/
-└── views/
-    ├── app.blade.php       ← Layout partie publique
-    ├── dashboard.blade.php ← Layout dashboard
-    ├── components/
-    │   ├── header.blade.php           ← Header public
-    │   ├── footer.blade.php           ← Footer public
-    │   └── dashboard/
-    │       ├── topbar.blade.php       ← Topbar dashboard
-    │       └── sidebar.blade.php      ← Sidebar dashboard
-    ├── public/                        ← Vues publiques
-    │   ├── index.blade.php
-    │   ├── articles.blade.php
-    │   ├── article.blade.php
-    │   ├── categories.blade.php
-    │   └── about.blade.php
-    └── dashboard/                     ← Vues dashboard
-        ├── index.blade.php
-        ├── articles.blade.php
-        ├── categories.blade.php
-        ├── users.blade.php
-        ├── comments.blade.php
-        └── settings.blade.php
-
 app/
+├── Models/
+│   ├── Post.php          ← Ajouter les relations si nécessaire
+│   ├── Category.php      ← Ajouter les relations si nécessaire
+│   ├── Comment.php       ← Ajouter les relations si nécessaire
+│   └── User.php          ← Modèle existant
 └── Http/
     └── Controllers/
-        ├── MainController.php
-        └── DashboardController.php
+        ├── MainController.php       ← Passer les données aux vues publiques
+        └── DashboardController.php  ← Passer les données aux vues du dashboard
 
-public/
-└── css/
-    ├── public.css
-    └── dashboard.css
-
-routes/
-└── web.php
+resources/views/
+├── public/
+│   ├── index.blade.php        ← Dynamiser
+│   ├── articles.blade.php     ← Dynamiser
+│   ├── categories.blade.php   ← Dynamiser
+│   └── about.blade.php        ← Dynamiser
+└── dashboard/
+    ├── index.blade.php        ← Dynamiser
+    ├── articles.blade.php     ← Dynamiser
+    ├── categories.blade.php   ← Dynamiser
+    ├── comments.blade.php     ← Dynamiser
+    └── users.blade.php        ← Dynamiser
 ```
 
 ---
 
 ## Critères d'évaluation
 
-| Critère                                                            | Points     |
-| ------------------------------------------------------------------ | ---------- |
-| Layouts Blade corrects avec `@extends`, `@yield`, `@section`       | 3 pts      |
-| Composants publics (header, footer) fonctionnels avec `asset()`    | 3 pts      |
-| Composants dashboard (topbar, sidebar) fonctionnels avec `asset()` | 3 pts      |
-| Routes publiques nommées et correctement déclarées                 | 3 pts      |
-| Routes dashboard groupées avec préfixe et nommage cohérent         | 3 pts      |
-| Contrôleurs créés avec les bonnes méthodes et retours de vues      | 3 pts      |
-| Liens Blade partout                                                | 4 pts      |
-| Réponses aux questions théoriques                                  | 8 pts      |
-| **Total**                                                          | **30 pts** |
+| Critère | Points |
+|---|---|
+| Page d'accueil dynamisée (articles, catégories, stats) | 1.5 pt |
+| Page articles dynamisée (liste, stats, catégories) | 1.5 pt |
+| Page catégories dynamisée (liste + nombre d'articles) | 1 pt |
+| Page à propos dynamisée (stats + utilisateurs) | 1 pt |
+| Dashboard — Index dynamisé (stats + 7 derniers articles) | 1.5 pt |
+| Dashboard — Articles dynamisé (10 derniers) | 1 pt |
+| Dashboard — Catégories, Commentaires, Utilisateurs dynamisés | 1 pt |
+| Réponses aux questions théoriques | 1.5 pt |
+| **Total** | **10 pts** |
 
 ---
 

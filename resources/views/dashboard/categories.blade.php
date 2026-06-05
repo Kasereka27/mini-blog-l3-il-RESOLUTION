@@ -7,7 +7,7 @@
                 <!-- LISTE -->
                 <div class="panel">
                     <div class="panel-header">
-                        <div class="panel-title">Toutes les catégories (5)</div>
+                        <div class="panel-title">Toutes les catégories ({{ $categories->count() }})</div>
                     </div>
                     <table>
                         <thead>
@@ -21,66 +21,24 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @forelse($categories as $category)
                             <tr>
-                                <td class="text-muted">1</td>
-                                <td><strong>Vitae</strong></td>
-                                <td class="text-muted">vitae</td>
-                                <td><span class="cat-count">10 articles</span></td>
-                                <td class="text-muted">17 avr. 2026</td>
+                                <td class="text-muted">{{ $category->id }}</td>
+                                <td><strong>{{ $category->name }}</strong></td>
+                                <td class="text-muted">{{ $category->slug }}</td>
+                                <td><span class="cat-count">{{ $category->articles_count }} articles</span></td>
+                                <td class="text-muted">{{ $category->created_at->format('d M. Y') }}</td>
                                 <td>
                                     <div class="actions"><button class="btn btn-edit"
-                                            onclick="openEditCat('Vitae','vitae')">Éditer</button><button
+                                            onclick="openEditCat('{{ addslashes($category->name) }}','{{ addslashes($category->slug) }}')">Éditer</button><button
                                             class="btn btn-danger">Suppr.</button></div>
                                 </td>
                             </tr>
+                            @empty
                             <tr>
-                                <td class="text-muted">2</td>
-                                <td><strong>Dignissimos</strong></td>
-                                <td class="text-muted">dignissimos</td>
-                                <td><span class="cat-count">10 articles</span></td>
-                                <td class="text-muted">17 avr. 2026</td>
-                                <td>
-                                    <div class="actions"><button class="btn btn-edit"
-                                            onclick="openEditCat('Dignissimos','dignissimos')">Éditer</button><button
-                                            class="btn btn-danger">Suppr.</button></div>
-                                </td>
+                                <td colspan="6" style="text-align:center">Aucune catégorie.</td>
                             </tr>
-                            <tr>
-                                <td class="text-muted">3</td>
-                                <td><strong>Optio</strong></td>
-                                <td class="text-muted">optio</td>
-                                <td><span class="cat-count">10 articles</span></td>
-                                <td class="text-muted">17 avr. 2026</td>
-                                <td>
-                                    <div class="actions"><button class="btn btn-edit"
-                                            onclick="openEditCat('Optio','optio')">Éditer</button><button
-                                            class="btn btn-danger">Suppr.</button></div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">4</td>
-                                <td><strong>Aperiam</strong></td>
-                                <td class="text-muted">aperiam</td>
-                                <td><span class="cat-count">10 articles</span></td>
-                                <td class="text-muted">17 avr. 2026</td>
-                                <td>
-                                    <div class="actions"><button class="btn btn-edit"
-                                            onclick="openEditCat('Aperiam','aperiam')">Éditer</button><button
-                                            class="btn btn-danger">Suppr.</button></div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">5</td>
-                                <td><strong>Tenetur</strong></td>
-                                <td class="text-muted">tenetur</td>
-                                <td><span class="cat-count">10 articles</span></td>
-                                <td class="text-muted">17 avr. 2026</td>
-                                <td>
-                                    <div class="actions"><button class="btn btn-edit"
-                                            onclick="openEditCat('Tenetur','tenetur')">Éditer</button><button
-                                            class="btn btn-danger">Suppr.</button></div>
-                                </td>
-                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

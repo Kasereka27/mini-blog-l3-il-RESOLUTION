@@ -11,51 +11,48 @@
                 sur des sujets qui comptent vraiment.</p>
             <div class="hero-stats">
                 <div>
-                    <div class="stat-num">50</div>
+                    <div class="stat-num">{{ $stats['posts'] }}</div>
                     <div class="stat-label">Articles publiés</div>
                 </div>
                 <div>
-                    <div class="stat-num">5</div>
+                    <div class="stat-num">{{ $stats['categories'] }}</div>
                     <div class="stat-label">Catégories</div>
                 </div>
                 <div>
-                    <div class="stat-num">250</div>
+                    <div class="stat-num">{{ $stats['comments'] }}</div>
                     <div class="stat-label">Commentaires</div>
                 </div>
             </div>
         </div>
         <div class="hero-visual">
-            <div class="stack-card">
-                <div class="card-label">Vitae</div>
-                <div class="card-title-sm">Sed molestiae omnis ratione ea enim</div>
-                <div class="card-excerpt-sm">Un article fascinant sur les mystères de la vie quotidienne...</div>
-            </div>
-            <div class="stack-card">
-                <div class="card-label">Dignissimos</div>
-                <div class="card-title-sm">Veniam maxime autem enim</div>
-                <div class="card-excerpt-sm">Explorer les chemins inattendus de la connaissance...</div>
-            </div>
-            <div class="stack-card">
-                <div class="card-label" style="color:var(--accent)">À la une</div>
-                <div class="card-title-sm" style="color:#F5F0E8">Excepturi eligendi aliquid iste laboriosam</div>
-                <div class="card-excerpt-sm" style="color:#8C7B6B">Le dernier article qui fait parler tout le monde...
-                </div>
-            </div>
+            @foreach($articles->reverse() as $article)
+                @if($loop->last)
+                    <div class="stack-card">
+                        <div class="card-label" style="color:var(--accent)">À la une</div>
+                        <div class="card-title-sm" style="color:#F5F0E8">{{ $article->title }}</div>
+                        <div class="card-excerpt-sm" style="color:#8C7B6B">{{ Str::limit($article->content, 50) }}</div>
+                    </div>
+                @else
+                    <div class="stack-card">
+                        <div class="card-label">{{ $article->category->name ?? 'Général' }}</div>
+                        <div class="card-title-sm">{{ $article->title }}</div>
+                        <div class="card-excerpt-sm">{{ Str::limit($article->content, 50) }}</div>
+                    </div>
+                @endif
+            @endforeach
         </div>
     </section>
 
     <section class="section" style="padding-bottom:0">
         <div class="section-header">
             <h2 class="section-title">Catégories</h2>
-            <a href="#" class="section-link">Voir toutes →</a>
+            <a href="{{ route('categories.index') }}" class="section-link">Voir toutes →</a>
         </div>
         <div class="categories-row">
             <a href="#" class="cat-pill active">Tout</a>
-            <a href="#" class="cat-pill">Vitae</a>
-            <a href="#" class="cat-pill">Dignissimos</a>
-            <a href="#" class="cat-pill">Optio</a>
-            <a href="#" class="cat-pill">Aperiam</a>
-            <a href="#" class="cat-pill">Tenetur</a>
+            @foreach($categories as $category)
+                <a href="#" class="cat-pill">{{ $category->name }}</a>
+            @endforeach
         </div>
     </section>
 
@@ -65,20 +62,21 @@
             <a href="#" class="section-link">Voir tout →</a>
         </div>
         <div class="articles-grid">
-            <a href="{{ route('articles.show', ['slug' => 'azerty-and-querty']) }}" class="article-card featured">
-                <div class="article-cat">Vitae &bull; À la une</div>
-                <h2 class="article-title">Excepturi eligendi aliquid iste laboriosam et soluta cum</h2>
-                <p class="article-excerpt">Recusandae non totam rerum vero at. Vel ut soluta ipsum nihil aut natus
-                    suscipit explicabo. Non pariatur accusantium possimus molestiae et numquam est aperiam. Excepturi
-                    consequuntur et voluptatem adipisci doloribus et. Tenetur eligendi earum qui sunt qui. Facilis unde
-                    iure perferendis commodi corrupti blanditiis earum.</p>
+            @forelse($articles as $article)
+            <a href="{{ route('articles.show', ['slug' => $article->slug ]) }}" class="article-card featured">
+                <div class="article-cat">{{ $article->category->name }} &bull; À la une</div>
+                <h2 class="article-title">{{ $article->title }}</h2>
+                <p class="article-excerpt">{{ $article->content }}.</p>
                 <div class="article-meta">
-                    <span>Jacklyn Lueilwitz</span>
-                    <span>15 juillet 2015</span>
-                    <span>5 commentaires</span>
+                    <span>{{ $article->user->name }}</span>
+                    <span>{{ $article->updated_at }}</span>
+                    <span>{{ $article->comment->count() }} commentaires</span>
                 </div>
             </a>
-            <a href="{{ route('articles.show', ['slug' => 'azerty-and-querty']) }}" class="article-card">
+            @empty
+                <div>Pas d'article disponible.</div>
+            @endforelse
+            {{--<a href="{{ route('articles.show', ['slug' => 'azerty-and-querty']) }}" class="article-card">
                 <div class="article-cat">Aperiam</div>
                 <h3 class="article-title">Aut repellat ut qui et</h3>
                 <p class="article-excerpt">Pariatur nobis dicta esse cum. Magni nesciunt facere exercitationem. Dolorum
@@ -97,7 +95,7 @@
                     <span>Dr. Jenifer Sipes</span>
                     <span>23 sept. 1988</span>
                 </div>
-            </a>
+            </a>--}}
         </div>
     </section>
 

@@ -33,110 +33,31 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @forelse($articles as $article)
                         <tr>
-                            <td class="text-muted">1</td>
-                            <td class="truncate">Sed molestiae omnis ratione ea enim ea</td>
-                            <td class="text-muted">Vitae</td>
-                            <td class="text-muted">Annetta Runolfsson</td>
-                            <td><span class="badge badge-published">Publié</span></td>
-                            <td class="text-muted">21 jan. 2012</td>
+                            <td class="text-muted">{{ $article->id }}</td>
+                            <td class="truncate">{{ $article->title }}</td>
+                            <td class="text-muted">{{ $article->category->name }}</td>
+                            <td class="text-muted">{{ $article->user->name }}</td>
+                            <td>
+                                @if($article->published_at && $article->published_at <= now())
+                                    <span class="badge badge-published">Publié</span>
+                                @else
+                                    <span class="badge badge-draft">Brouillon</span>
+                                @endif
+                            </td>
+                            <td class="text-muted">{{ $article->published_at ? $article->published_at->format('d M. Y') : '—' }}</td>
                             <td>
                                 <div class="actions"><button class="btn btn-edit"
                                         onclick="openEdit()">Éditer</button><button
                                         class="btn btn-danger">Suppr.</button></div>
                             </td>
                         </tr>
+                        @empty
                         <tr>
-                            <td class="text-muted">2</td>
-                            <td class="truncate">Sit ad perferendis possimus ut</td>
-                            <td class="text-muted">Vitae</td>
-                            <td class="text-muted">Janet Davis</td>
-                            <td><span class="badge badge-published">Publié</span></td>
-                            <td class="text-muted">20 nov. 1996</td>
-                            <td>
-                                <div class="actions"><button class="btn btn-edit"
-                                        onclick="openEdit()">Éditer</button><button
-                                        class="btn btn-danger">Suppr.</button></div>
-                            </td>
+                            <td colspan="7" style="text-align:center">Aucun article trouvé.</td>
                         </tr>
-                        <tr>
-                            <td class="text-muted">3</td>
-                            <td class="truncate">Veniam maxime autem enim</td>
-                            <td class="text-muted">Vitae</td>
-                            <td class="text-muted">Madalyn Lowe</td>
-                            <td><span class="badge badge-published">Publié</span></td>
-                            <td class="text-muted">1 oct. 1990</td>
-                            <td>
-                                <div class="actions"><button class="btn btn-edit"
-                                        onclick="openEdit()">Éditer</button><button
-                                        class="btn btn-danger">Suppr.</button></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-muted">4</td>
-                            <td class="truncate">Tempora aut et incidunt ad ipsa</td>
-                            <td class="text-muted">Vitae</td>
-                            <td class="text-muted">Alena Heathcote</td>
-                            <td><span class="badge badge-draft">Brouillon</span></td>
-                            <td class="text-muted">—</td>
-                            <td>
-                                <div class="actions"><button class="btn btn-edit"
-                                        onclick="openEdit()">Éditer</button><button
-                                        class="btn btn-danger">Suppr.</button></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-muted">5</td>
-                            <td class="truncate">Cumque itaque dolorum non est praesentium</td>
-                            <td class="text-muted">Vitae</td>
-                            <td class="text-muted">Brennan Purdy II</td>
-                            <td><span class="badge badge-draft">Brouillon</span></td>
-                            <td class="text-muted">—</td>
-                            <td>
-                                <div class="actions"><button class="btn btn-edit"
-                                        onclick="openEdit()">Éditer</button><button
-                                        class="btn btn-danger">Suppr.</button></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-muted">27</td>
-                            <td class="truncate">Excepturi eligendi aliquid iste laboriosam et soluta cum</td>
-                            <td class="text-muted">Optio</td>
-                            <td class="text-muted">Jacklyn Lueilwitz</td>
-                            <td><span class="badge badge-published">Publié</span></td>
-                            <td class="text-muted">15 jul. 2015</td>
-                            <td>
-                                <div class="actions"><button class="btn btn-edit"
-                                        onclick="openEdit()">Éditer</button><button
-                                        class="btn btn-danger">Suppr.</button></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-muted">31</td>
-                            <td class="truncate">Aut repellat ut qui et</td>
-                            <td class="text-muted">Aperiam</td>
-                            <td class="text-muted">Dr. Travon Kirlin</td>
-                            <td><span class="badge badge-published">Publié</span></td>
-                            <td class="text-muted">8 oct. 2019</td>
-                            <td>
-                                <div class="actions"><button class="btn btn-edit"
-                                        onclick="openEdit()">Éditer</button><button
-                                        class="btn btn-danger">Suppr.</button></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-muted">50</td>
-                            <td class="truncate">Sed laudantium facilis dolore non sunt</td>
-                            <td class="text-muted">Tenetur</td>
-                            <td class="text-muted">Esteban Murphy</td>
-                            <td><span class="badge badge-published">Publié</span></td>
-                            <td class="text-muted">4 nov. 1980</td>
-                            <td>
-                                <div class="actions"><button class="btn btn-edit"
-                                        onclick="openEdit()">Éditer</button><button
-                                        class="btn btn-danger">Suppr.</button></div>
-                            </td>
-                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
                 <div class="pagination">
@@ -278,3 +199,4 @@
         });
     </script>
 @endsection
+
