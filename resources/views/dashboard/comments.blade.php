@@ -74,15 +74,48 @@
                 @endforelse
 
             </div>
-
+            
+            {{-- <div class="pagination">
+                @for($i = 1; $i <= $comments->lastPage(); $i++)
+                    <a href="{{ $comments->path() }}?page={{ $i }}" class="page-btn {{ $i == $comments->currentPage() ? "active" : "" }} ">{{ $i }}</a>
+                    @endfor
+            
+            </div> --}}
             <div class="pagination">
-                <button class="page-btn active">1</button>
-                <button class="page-btn">2</button>
-                <button class="page-btn">3</button>
-                <button class="page-btn">…</button>
-                <button class="page-btn">13</button>
-                <button class="page-btn">→</button>
+                {{-- 1. Bouton Précédent --}}
+                @if ($comments->onFirstPage())
+                    <span class="page-btn disabled">«</span>
+                @else
+                    <a href="{{ $comments->previousPageUrl() }}" class="page-btn">«</a>
+                @endif
+
+                {{-- 2. Boucle sur les liens de pagination --}}
+                @foreach ($comments->linkCollection() as $link)
+                    {{-- On ignore les boutons Précédent/Suivant par défaut textuels générés par Laravel --}}
+                    @if (!str_contains($link['label'], 'Previous') && !str_contains($link['label'], 'Next'))
+                        
+                        @if ($link['label'] === '...')
+                            {{-- Séparateur trois points --}}
+                            <span class="page-btn separator">{{ $link['label'] }}</span>
+                        @elseif ($link['active'])
+                            {{-- Page active --}}
+                            <span class="page-btn active">{{ $link['label'] }}</span>
+                        @else
+                            {{-- Page cliquable --}}
+                            <a href="{{ $link['url'] }}" class="page-btn">{{ $link['label'] }}</a>
+                        @endif
+
+                    @endif
+                @endforeach
+
+                {{-- 3. Bouton Suivant --}}
+                @if ($comments->hasMorePages())
+                    <a href="{{ $comments->nextPageUrl() }}" class="page-btn">»</a>
+                @else
+                    <span class="page-btn disabled">»</span>
+                @endif
             </div>
+            
         </div>
     </div>
 

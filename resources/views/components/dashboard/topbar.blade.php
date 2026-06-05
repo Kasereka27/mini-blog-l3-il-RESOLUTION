@@ -6,4 +6,7 @@
             style="font-size:0.78rem;color:var(--muted);text-decoration:none;padding:0.45rem 1rem;border:1px solid var(--border)">↗
             Voir le blog</a>
     </div>
+    <button class="btn btn-secondary">
+        {{-- {{ route('logout') }} --}} logout
+    </button>
 </div>

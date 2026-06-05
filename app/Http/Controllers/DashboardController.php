@@ -10,7 +10,8 @@ use App\Models\Comment;
 
 class DashboardController
 {
-    public function index(){
+    public function index()
+    {
         $stats = [
             'posts' => Post::count(),
             'comments' => Comment::count(),
@@ -21,27 +22,34 @@ class DashboardController
         return view('dashboard.index', compact('stats', 'recent_articles'));
     }
 
-    public function articles(){
-        $articles = Post::with(['category', 'user'])->latest('id')->limit(10)->get();
+    public function articles()
+    {
+        $articles = Post::with(['category', 'user'])->latest('id')->limit(10)->paginate(10);
+
         return view('dashboard.articles', compact('articles'));
     }
 
-    public function categories(){
-        $categories = Category::withCount('articles')->get();
+    public function categories()
+    {
+        $categories = Category::withCount('articles')->paginate(5);
         return view('dashboard.categories', compact('categories'));
     }
 
-    public function users(){
+    public function users()
+    {
         $users = User::withCount('posts')->get();
         return view('dashboard.users', compact('users'));
     }
 
-    public function comments(){
-        $comments = Comment::with(['user', 'post'])->get();
+    public function comments()
+    {
+        $comments = Comment::with(['user', 'post'])->paginate(10);
+        //dd($comments);
         return view('dashboard.comments', compact('comments'));
     }
 
-    public function settings(){
+    public function settings()
+    {
         return view('dashboard.settings');
     }
 }

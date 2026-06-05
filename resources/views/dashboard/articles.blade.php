@@ -61,12 +61,14 @@
                     </tbody>
                 </table>
                 <div class="pagination">
-                    <button class="page-btn active">1</button>
-                    <button class="page-btn">2</button>
+                    @for($i = 1; $i <= $articles->lastPage(); $i++)
+                    <a href="{{ $articles->path() }}?page={{ $i }}" class="page-btn {{ $i == $articles->currentPage() ? "active" : "" }} ">{{ $i }}</a>
+                    @endfor
+                    {{-- <button class="page-btn">2</button>
                     <button class="page-btn">3</button>
                     <button class="page-btn">4</button>
                     <button class="page-btn">5</button>
-                    <button class="page-btn">→</button>
+                    <button class="page-btn">→</button> --}}
                 </div>
             </div>
         </div>

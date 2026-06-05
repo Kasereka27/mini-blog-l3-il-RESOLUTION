@@ -41,6 +41,16 @@
                             @endforelse
                         </tbody>
                     </table>
+                    <div class="pagination">
+                    @for($i = 1; $i <= $categories->lastPage(); $i++)
+                    <a href="{{ $categories->path() }}?page={{ $i }}" class="page-btn {{ $i == $categories->currentPage() ? "active" : "" }} ">{{ $i }}</a>
+                    @endfor
+                    {{-- <button class="page-btn">2</button>
+                    <button class="page-btn">3</button>
+                    <button class="page-btn">4</button>
+                    <button class="page-btn">5</button>
+                    <button class="page-btn">→</button> --}}
+                    </div>
                 </div>
 
                 <!-- CREATE FORM -->
