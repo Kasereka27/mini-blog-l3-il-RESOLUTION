@@ -22,7 +22,10 @@ class MainController
 
     public function articles(){
 
-        $articles = Post::limit(10)->orderByDesc('id')->get();
+        //articles = Post::limit(10)->orderByDesc('id')->get();
+        
+        $articles = Post::paginate(10);
+        //dd($articles); 
         $stats = [
             'posts' => Post::count(),
             'categories' => Category::count(),
