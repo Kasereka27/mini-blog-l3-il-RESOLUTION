@@ -5,6 +5,8 @@ use App\Http\Controllers\MainController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+
+
 Route::controller(MainController::class)->group(function () {
     Route::get('/', 'index')->name('home');
     Route::get('/articles', 'articles')->name('articles.index');
@@ -16,12 +18,14 @@ Route::controller(MainController::class)->group(function () {
 Route::prefix('/dashboard')
     ->controller(DashboardController::class)
     ->name('dashboard.')
+    ->middleware('auth')
     ->group(function () {
-    Route::get('', 'index')->name('index');
+    Route::get('/', 'index')->name('index');
     Route::get('/articles', 'articles')->name('articles');
     Route::get('/categories', 'categories')->name('categories');
     Route::get('/utilisateurs', 'users')->name('users');
     Route::get('/commentaires', 'comments')->name('comments');
     Route::get('/reglages', 'settings')->name('settings');
 });
+
 require __DIR__.'/auth.php';
