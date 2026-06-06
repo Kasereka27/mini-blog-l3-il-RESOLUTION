@@ -18,7 +18,7 @@ Route::controller(MainController::class)->group(function () {
 Route::prefix('/dashboard')
     ->controller(DashboardController::class)
     ->name('dashboard.')
-    ->middleware('auth')
+    ->middleware('auth'/* , 'admin' */)
     ->group(function () {
     Route::get('/', 'index')->name('index');
     Route::get('/articles', 'articles')->name('articles');
