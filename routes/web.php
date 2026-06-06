@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(MainController::class)->group(function () {
@@ -23,3 +24,4 @@ Route::prefix('/dashboard')
     Route::get('/commentaires', 'comments')->name('comments');
     Route::get('/reglages', 'settings')->name('settings');
 });
+require __DIR__.'/auth.php';
