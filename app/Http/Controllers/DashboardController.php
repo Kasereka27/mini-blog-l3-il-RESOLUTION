@@ -37,7 +37,7 @@ class DashboardController
 
     public function users()
     {
-        $users = User::withCount('posts')->get();
+        $users = User::withCount('articles')->paginate(10);
         return view('dashboard.users', compact('users'));
     }
 

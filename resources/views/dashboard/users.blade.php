@@ -53,12 +53,38 @@
                     </tbody>
                 </table>
                 <div class="pagination">
-                    <button class="page-btn active">1</button>
-                    <button class="page-btn">2</button>
-                    <button class="page-btn">3</button>
-                    <button class="page-btn">…</button>
-                    <button class="page-btn">16</button>
-                    <button class="page-btn">→</button>
+                    {{-- 1. Bouton Précédent --}}
+                    @if ($users->onFirstPage())
+                        <span class="page-btn disabled">«</span>
+                    @else
+                        <a href="{{ $users->previousPageUrl() }}" class="page-btn">«</a>
+                    @endif
+
+                    {{-- 2. Boucle sur les liens de pagination --}}
+                    @foreach ($users->linkCollection() as $link)
+                        {{-- On ignore les boutons Précédent/Suivant par défaut textuels générés par Laravel --}}
+                        @if (!str_contains($link['label'], 'Previous') && !str_contains($link['label'], 'Next'))
+                            
+                            @if ($link['label'] === '...')
+                                {{-- Séparateur trois points --}}
+                                <span class="page-btn separator">{{ $link['label'] }}</span>
+                            @elseif ($link['active'])
+                                {{-- Page active --}}
+                                <span class="page-btn active">{{ $link['label'] }}</span>
+                            @else
+                                {{-- Page cliquable --}}
+                                <a href="{{ $link['url'] }}" class="page-btn">{{ $link['label'] }}</a>
+                            @endif
+
+                        @endif
+                    @endforeach
+
+                    {{-- 3. Bouton Suivant --}}
+                    @if ($users->hasMorePages())
+                        <a href="{{ $users->nextPageUrl() }}" class="page-btn">»</a>
+                    @else
+                        <span class="page-btn disabled">»</span>
+                    @endif
                 </div>
             </div>
         </div>
