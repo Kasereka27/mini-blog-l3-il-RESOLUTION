@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Comment;
 
-class MainController
+class MainController extends Controller
 {
     public function index(){
         $articles = Post::limit(3)->orderByDesc('id')->get();

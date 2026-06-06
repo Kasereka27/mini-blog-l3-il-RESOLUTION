@@ -8,7 +8,7 @@ use App\Models\Category;
 use App\Models\User;
 use App\Models\Comment;
 
-class DashboardController
+class DashboardController extends Controller
 {
     public function index()
     {
