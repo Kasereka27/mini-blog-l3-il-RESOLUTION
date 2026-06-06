@@ -42,15 +42,39 @@
                         </tbody>
                     </table>
                     <div class="pagination">
-                    @for($i = 1; $i <= $categories->lastPage(); $i++)
-                    <a href="{{ $categories->path() }}?page={{ $i }}" class="page-btn {{ $i == $categories->currentPage() ? "active" : "" }} ">{{ $i }}</a>
-                    @endfor
-                    {{-- <button class="page-btn">2</button>
-                    <button class="page-btn">3</button>
-                    <button class="page-btn">4</button>
-                    <button class="page-btn">5</button>
-                    <button class="page-btn">→</button> --}}
-                    </div>
+                {{-- 1. Bouton Précédent --}}
+                @if ($categories->onFirstPage())
+                    <span class="page-btn disabled">«</span>
+                @else
+                    <a href="{{ $categories->previousPageUrl() }}" class="page-btn">«</a>
+                @endif
+
+                {{-- 2. Boucle sur les liens de pagination --}}
+                @foreach ($categories->linkCollection() as $link)
+                    {{-- On ignore les boutons Précédent/Suivant par défaut textuels générés par Laravel --}}
+                    @if (!str_contains($link['label'], 'Previous') && !str_contains($link['label'], 'Next'))
+                        
+                        @if ($link['label'] === '...')
+                            {{-- Séparateur trois points --}}
+                            <span class="page-btn separator">{{ $link['label'] }}</span>
+                        @elseif ($link['active'])
+                            {{-- Page active --}}
+                            <span class="page-btn active">{{ $link['label'] }}</span>
+                        @else
+                            {{-- Page cliquable --}}
+                            <a href="{{ $link['url'] }}" class="page-btn">{{ $link['label'] }}</a>
+                        @endif
+
+                    @endif
+                @endforeach
+
+                {{-- 3. Bouton Suivant --}}
+                @if ($categories->hasMorePages())
+                    <a href="{{ $categories->nextPageUrl() }}" class="page-btn">»</a>
+                @else
+                    <span class="page-btn disabled">»</span>
+                @endif
+            </div>
                 </div>
 
                 <!-- CREATE FORM -->
